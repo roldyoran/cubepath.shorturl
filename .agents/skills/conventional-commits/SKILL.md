@@ -1,173 +1,282 @@
 ---
 name: conventional-commits
-description: Use conventional commit format for all git commits. This skill ensures consistent and standardized commit messages following the conventional commits specification in English only. The body must be descriptive and explain what was changed in the files.
+description: Enforce strict Conventional Commits format. Scope is optional and MUST be inferred automatically from modified files when possible.
 license: LICENSE.txt
 ---
 
-This skill enforces the use of conventional commits format for all git commits. All commit messages MUST be written in English only.
+This skill enforces **strict Conventional Commits formatting** for all git commits.
+All commit messages **MUST be written in English only**.
 
-## Conventional Commits Specification
+The AI MUST always generate commits following the exact structure and rules defined below.
 
-Commit messages must follow this format:
+---
+
+# Required Commit Format
 
 ```
-<type>(<scope>): <description>
+<type>(<scope (optional)>): <description>
 
-<descriptive body explaining what was done in the files>
-```
-
-### Types
-
-Use one of the following types:
-- `feat` — A new feature
-- `fix` — A bug fix
-- `refactor` — Code refactoring without changing behavior
-- `docs` — Documentation changes
-- `test` — Adding or updating tests
-- `chore` — Maintenance tasks, tooling, dependencies
-- `perf` — Performance improvements
-- `style` — Code style changes (formatting, semicolons, etc.)
-- `build` — Build system or dependency changes
-- `ci` — CI configuration changes
-- `revert` — Reverting a previous commit
-
-### Scope
-
-The scope is optional but recommended when it adds clarity. Use a scope that describes the area of the codebase:
-
-**Frontend:**
-- `ui` — User interface, components, pages
-- `router` — Routing, navigation, redirects
-- `state` — State management, stores
-- `forms` — Form handling, validation
-- `styles` — CSS, styling, themes
-
-**Backend:**
-- `api` — API endpoints, routes, controllers
-- `db` — Database, migrations, schemas, queries
-- `auth` — Authentication, authorization, sessions
-- `middleware` — Middleware, interceptors
-- `services` — Business logic, services
-
-**General:**
-- `config` — Configuration files, environment
-- `deps` — Dependencies, packages
-- `tests` — Test files and test infrastructure
-- `docs` — Documentation
-- `infra` — Infrastructure, deployment
-- `utils` — Utility functions, helpers
-- `types` — Types, interfaces, schemas
-- `i18n` — Internationalization, translations
-- `logging` — Logging, monitoring
-- `security` — Security fixes, sanitization
-- `cache` — Caching, caching strategies
-- `email` — Email templates, notifications
-- `file` — File handling, uploads
-- `mobile` — Mobile-specific changes (React Native, Flutter, etc.)
-- `desktop` — Desktop application changes
-
-### Description
-
-- Use imperative mood: "add" not "added" or "adds"
-- Keep it concise (max 50 characters)
-- Don't capitalize the first letter
-- No period at the end
-
-### Body
-
-The body is **mandatory** and must include:
-
-1. **Summary**: A brief description of what was done (1-3 lines)
-2. **File list**: A list of all modified or created files with a very brief description of the change
-
-Use this format:
-```
-<summary description>
+<summary>
 
 Files:
-- filename.ext: brief description of change
-- another-file.ext: brief description of change
+- [NEW] path/file.ext: short description
+- [MOD] path/file.ext: short description
+- [DEL] path/file.ext: short description
 ```
 
-#### File List Requirements
+If no clear scope can be inferred:
 
-- List ALL files that were modified, created, or deleted
-- Use relative paths from the project root
-- Keep the description extremely brief (2-5 words)
-- Group related files together if needed
-- Use prefix to indicate change type: `[NEW]`, `[MOD]`, `[DEL]`
-
-Use this format:
 ```
-Files:
-- [NEW] filename.ext: brief description
-- [MOD] another-file.ext: brief description
-- [DEL] deleted-file.ext: brief description of what was removed
+<type>: <description>
 ```
 
-### Examples
+---
+
+# Commit Structure Rules
+
+## Header
+
+```
+<type>(<scope (optional)>): <description>
+```
+
+OR
+
+```
+<type>: <description>
+```
+
+### Header Requirements
+
+* MUST use lowercase
+* MUST use imperative mood
+* MUST NOT exceed 50 characters
+* MUST NOT end with a period
+* MUST NOT contain emojis
+* MUST NOT contain extra whitespace
+* Scope is OPTIONAL but MUST be inferred when possible
+
+---
+
+# Scope Inference (MANDATORY WHEN POSSIBLE)
+
+The AI MUST infer scope automatically using:
+
+1. Modified file paths
+2. Folder names
+3. File types
+4. Module names
+
+## Folder → Scope Mapping
+
+### Frontend
+
+* `src/components/` → ui
+* `src/pages/` → ui
+* `src/router/` → router
+* `src/store/` → state
+* `src/forms/` → forms
+* `src/styles/` → styles
+
+### Backend
+
+* `routes/` → api
+* `controllers/` → api
+* `models/` → db
+* `migrations/` → db
+* `auth/` → auth
+* `middleware/` → middleware
+* `services/` → services
+
+### General
+
+* `config/` → config
+* `tests/` → tests
+* `docs/` → docs
+* `scripts/` → chore
+* `infra/` → infra
+* `utils/` → utils
+* `types/` → types
+* `i18n/` → i18n
+* `logs/` → logging
+* `security/` → security
+* `cache/` → cache
+
+## Inference Rules
+
+* If all files share same area → use that scope
+* If multiple areas → omit scope
+* If unclear → omit scope
+* If root-level files only → omit scope
+* If dependency changes → use `deps`
+* If CI files → use `ci`
+* If build files → use `build`
+
+---
+
+# Allowed Types
+
+Use ONLY one of these:
+
+* feat
+* fix
+* refactor
+* docs
+* test
+* chore
+* perf
+* style
+* build
+* ci
+* revert
+
+---
+
+# Description Rules
+
+* Use imperative mood
+* Be concise
+* Max 50 characters
+* No capital first letter
+* No trailing period
+
+Correct:
 
 ```
 feat(api): add user registration endpoint
+```
 
-Created new POST endpoint for user signup with validation. Added password hashing and token generation.
+Correct (no scope):
+
+```
+chore: update dependencies
+```
+
+Incorrect:
+
+```
+feat: Added new endpoint.
+```
+
+---
+
+# Body (MANDATORY)
+
+The body MUST always be included.
+
+Structure:
+
+```
+<1-3 line summary>
 
 Files:
-- [NEW] routes/auth.ts: added POST /register endpoint
-- [NEW] controllers/auth.ts: added registration logic with validation
-- [NEW] models/user.ts: added user schema with email/password fields
-- [NEW] utils/auth.ts: added password hashing and token generation functions
-- [NEW] middleware/auth.ts: added auth middleware
+- [NEW] file: description
 ```
 
-```
-fix(ui): resolve button alignment on mobile
+## Summary Requirements
 
-Fixed spacing issue in the navigation component that caused buttons to overflow on small screens.
+* 1–3 lines
+* Explain WHAT changed
+* No emojis
+* No bullet points
 
-Files:
-- [MOD] components/Navbar.vue: fixed flexbox alignment and added responsive styles
-- [MOD] styles/buttons.css: adjusted padding and margins for mobile
-```
+---
 
-```
-refactor(db): optimize query performance
+# Files Section (MANDATORY)
 
-Restructured database queries to reduce N+1 problems. Added proper indexing for frequently accessed columns.
-
-Files:
-- [MOD] models/post.ts: replaced eager loading with proper joins
-- [MOD] queries/posts.ts: refactored query methods
-- [NEW] migrations/001_add_indexes.sql: added indexes for foreign keys
-```
-
-```
-chore(deps): update React to version 18
-
-Upgraded React and related packages to latest stable version. Fixed deprecation warnings.
-
-Files:
-- [MOD] package.json: updated React and React DOM to v18
-- [MOD] package-lock.json: regenerated lock file
-- [MOD] src/index.tsx: updated root render to use createRoot
-```
-
-```
-fix(auth): remove deprecated session handling
-
-Removed legacy session middleware that was causing memory leaks.
-
-Files:
-- [DEL] middleware/legacy-session.ts: removed deprecated session handler
-- [MOD] middleware/index.ts: updated middleware exports
-```
+The commit MUST include a full list of modified files.
 
 ## Rules
 
-1. **Language**: All commit messages MUST be in English
-2. **Format**: Follow the conventional commits structure exactly
-3. **Body required**: Always include a descriptive body that explains what was changed
-4. **File list required**: Always include a list of all modified/created/deleted files with [NEW], [MOD], or [DEL] prefix and brief descriptions
-5. **Imperative mood**: Use "add", "fix", "update" not "added", "fixed", "updated"
-6. **No emoji**: Do not use emojis in commit messages
-7. **Breaking changes**: Prefix with `!` after type/scope or use `BREAKING CHANGE:` in footer
+* MUST include ALL modified files
+* MUST use relative paths
+* MUST include change prefix
+* MUST keep descriptions 2–5 words
+
+## Allowed Prefixes
+
+* [NEW]
+* [MOD]
+* [DEL]
+
+---
+
+# Example (Inferred Scope)
+
+```
+fix(api): validate user input
+
+Add validation for email and password fields in signup endpoint.
+
+Files:
+- [MOD] routes/auth.ts: add validation middleware
+- [MOD] controllers/auth.ts: validate request body
+```
+
+---
+
+# Example (No Scope)
+
+```
+chore: update dependencies
+
+Upgrade project dependencies to latest stable versions.
+
+Files:
+- [MOD] package.json: update versions
+- [MOD] package-lock.json: regenerate lockfile
+```
+
+---
+
+# Breaking Changes
+
+Breaking changes MUST be indicated in one of two ways:
+
+## Option 1
+
+```
+feat(api)!: change authentication flow
+```
+
+## Option 2
+
+Footer:
+
+```
+BREAKING CHANGE: authentication now requires token
+```
+
+---
+
+# Absolute Rules
+
+The AI MUST:
+
+1. Always write commits in English
+2. Always infer scope when possible
+3. Scope MUST be omitted if unclear
+4. Always include a body
+5. Always include file list
+6. Never use emojis
+7. Never omit modified files
+8. Never exceed 50 characters in description
+9. Never use past tense
+10. Never skip Files section
+
+---
+
+# AI Validation Checklist
+
+Before outputting a commit:
+
+* infer scope from file paths
+* omit scope if ambiguous
+* header format correct
+* description imperative
+* body exists
+* summary exists
+* files section exists
+* prefixes correct
+* no emojis
+* English language
