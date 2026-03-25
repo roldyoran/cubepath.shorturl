@@ -1,16 +1,15 @@
-<h1 align="center">SHORTURL</h1>
+<h1 align="center">CUBEPATH.SHORTURL</h1>
 
 <p align="center">by roldyoran</p>
 
-Acortador de URLs construido con **Hono** sobre **Cloudflare Workers**, **Cloudflare D1** (SQLite serverless) y **Drizzle ORM**. Arquitectura Hexagonal (Ports & Adapters).
+Acortador de URLs construido con **Hono**, **PostgreSQL** y **Drizzle ORM**. Arquitectura Hexagonal (Ports & Adapters). Despliegue con Docker.
 
 ---
 
 ## Requisitos previos
 
 - [Bun](https://bun.sh) ≥ 1.0
-- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/) ≥ 4.0 (incluido como devDependency)
-- Cuenta de Cloudflare con una base de datos D1 creada
+- [Docker](https://www.docker.com/) y Docker Compose
 
 ---
 
@@ -18,8 +17,8 @@ Acortador de URLs construido con **Hono** sobre **Cloudflare Workers**, **Cloudf
 
 ```bash
 # 1. Clona el repositorio
-git clone git@github.com:roldyoran/shorturl.git
-cd shorturl
+git clone https://github.com/roldyoran/cubepath.shorturl.git
+cd cubepath.shorturl
 
 # 2. Instala las dependencias
 bun install
@@ -29,49 +28,54 @@ bun install
 
 ## Configuración
 
-### 1. Variables de entorno (local)
-
-Crea un archivo `.env` en la raíz del proyecto:
+Crea un archivo `.env` en la carpeta `backend/`:
 
 ```env
 SERVICE_ADMIN_API_KEY=tu_api_key_secreta
 ```
 
-### 2. Wrangler — binding D1
+---
 
-Edita `wrangler.jsonc` y reemplaza el `database_id` con el ID de tu base de datos D1:
-
-```jsonc
-{
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "shorturl",
-      "database_id": "<tu-database-id>"
-    }
-  ]
-}
-```
-
-### 3. Migraciones de base de datos
+## Inicio rápido (Docker)
 
 ```bash
-# Aplicar migraciones en D1 local (desarrollo)
-bun run db:migrate:local
-
-# Aplicar migraciones en D1 remoto (producción)
-bun run db:migrate:remote
+# Iniciar todos los servicios (PostgreSQL + Backend)
+docker-compose up -d
 ```
+
+La API del backend inicia en `http://localhost:5044`.
 
 ---
 
-## Desarrollo local
+## Desarrollo local (Sin Docker)
+
+### 1. Iniciar PostgreSQL
 
 ```bash
-bun dev
+# Usando Docker solo para la base de datos
+docker run -d \
+  --name shorturl-db \
+  -e POSTGRES_USER=shorturl \
+  -e POSTGRES_PASSWORD=shorturl \
+  -e POSTGRES_DB=shorturl \
+  -p 5432:5432 \
+  postgres:16-alpine
 ```
 
-El servidor arranca en `http://localhost:8787`.
+### 2. Ejecutar migraciones de base de datos
+
+```bash
+cd backend
+bun run db:push
+```
+
+### 3. Iniciar el Backend
+
+```bash
+bun run dev
+```
+
+El servidor arranca en `http://localhost:5044`.
 
 ---
 
@@ -80,7 +84,7 @@ El servidor arranca en `http://localhost:8787`.
 ### Crear una URL corta
 
 ```bash
-curl -X POST http://localhost:8787/v1/urls \
+curl -X POST http://localhost:5044/v1/urls \
   -H "Content-Type: application/json" \
   -d '{"originalUrl": "https://www.epicgames.com"}'
 ```
@@ -98,7 +102,7 @@ curl -X POST http://localhost:8787/v1/urls \
 ### Crear una URL con shortCode personalizado
 
 ```bash
-curl -X POST http://localhost:8787/v1/urls \
+curl -X POST http://localhost:5044/v1/urls \
   -H "Content-Type: application/json" \
   -d '{"originalUrl": "https://hono.dev", "shortCode": "hono"}'
 ```
@@ -106,7 +110,7 @@ curl -X POST http://localhost:8787/v1/urls \
 ### Redirigir a la URL original
 
 ```bash
-curl -L http://localhost:8787/c04jzv
+curl -L http://localhost:5044/c04jzv
 ```
 
 Responde con `302 Location: https://www.epicgames.com` e incrementa el contador de visitas.
@@ -114,26 +118,26 @@ Responde con `302 Location: https://www.epicgames.com` e incrementa el contador 
 ### Listar todas las URLs
 
 ```bash
-curl http://localhost:8787/v1/urls
+curl http://localhost:5044/v1/urls
 ```
 
 ### Obtener una URL por shortCode
 
 ```bash
-curl http://localhost:8787/v1/urls/c04jzv
+curl http://localhost:5044/v1/urls/c04jzv
 ```
 
 ### Eliminar una URL (requiere API key)
 
 ```bash
-curl -X DELETE http://localhost:8787/v1/admin/urls/c04jzv \
+curl -X DELETE http://localhost:5044/v1/admin/urls/c04jzv \
   -H "Authorization: Bearer tu_api_key_secreta"
 ```
 
 ### Eliminar todas las URLs (requiere API key)
 
 ```bash
-curl -X DELETE http://localhost:8787/v1/admin/urls \
+curl -X DELETE http://localhost:5044/v1/admin/urls \
   -H "Authorization: Bearer tu_api_key_secreta"
 ```
 
@@ -142,28 +146,48 @@ curl -X DELETE http://localhost:8787/v1/admin/urls \
 ## Tests
 
 ```bash
+cd backend
 bun test                  # todos los tests
 bun run test:watch        # modo watch
-bun run test:coverage     # con reporte de cobertura
-bun run test:bail         # aborta al primer fallo
 ```
 
 ---
 
-## Deploy a Cloudflare Workers
+## Tecnologías
 
-```bash
-bun deploy
-```
+### Backend
+
+- [Bun](https://bun.sh) - Runtime de JavaScript
+- [Hono](https://hono.dev) - Framework web
+- [PostgreSQL](https://www.postgresql.org/) - Base de datos
+- [Drizzle ORM](https://orm.drizzle.team/) - ORM
+- [Docker](https://www.docker.com/) - Contenedores
+
+### Frontend
+
+- Vue 3 (Composition API)
+- Vite
+- Pinia (gestión de estado)
+- Shadcn-VUE (componentes UI)
+- Tailwind CSS
+- TypeScript
 
 ---
 
 ## Comandos útiles
 
 ```bash
-bun format                 # formatea el código con Biome
-bun run db:generate        # genera SQL de migración desde el schema
-bun run db:studio          # abre Drizzle Studio para inspeccionar la BD
+# Desarrollo
+bun run dev:front        # iniciar frontend
+bun run dev:back         # iniciar backend
+
+# Build
+bun run build:front      # build del frontend
+bun run build:back       # build del backend
+
+# Formato
+bun run format:front     # formatea frontend con Biome
+cd backend && bun run format  # formatea backend con Biome
 ```
 
 ---
@@ -184,17 +208,7 @@ El proyecto incluye un frontend simple en Vue 3 para probar la API con una inter
 ### Ejecutar el Frontend
 
 ```bash
-cd frontend
-bun dev
+bun run dev:front
 ```
 
 El frontend corre en `http://localhost:5173` (Vite por defecto).
-
-### Tecnologías del Frontend
-
-- Vue 3 (Composition API)
-- Vite
-- Pinia (gestión de estado)
-- Shadcn-VUE (componentes UI)
-- Tailwind CSS
-- TypeScript
