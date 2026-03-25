@@ -21,11 +21,35 @@ function checkEnvVars() {
 
 checkEnvVars();
 
+async function wait(ms: number) {
+	return new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * startServer with retry/backoff for migrations
+ */
 export async function startServer() {
-	try {
-		await runMigrations();
-	} catch (error) {
-		console.error("[INIT] Failed to run migrations:", error);
-		process.exit(1);
+	const maxAttempts = 10;
+	let attempt = 0;
+	let delayMs = 1000; // 1s initial
+
+	while (attempt < maxAttempts) {
+		try {
+			console.log(`[INIT] Attempt ${attempt + 1} to run database migrations...`);
+			await runMigrations();
+			console.log("[INIT] Database migrations completed successfully");
+			return;
+		} catch (error) {
+			attempt++;
+			console.error(`[INIT] Migration attempt ${attempt} failed:`, error?.message ?? error);
+			if (attempt >= maxAttempts) {
+				console.error("[INIT] Exceeded max migration attempts, exiting.");
+				process.exit(1);
+			}
+			console.log(`[INIT] Waiting ${delayMs}ms before retrying...`);
+			await wait(delayMs);
+			// exponential backoff with a cap to avoid excessively long waits
+			delayMs = Math.min(delayMs * 2, 30000);
+		}
 	}
 }

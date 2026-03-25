@@ -1,15 +1,29 @@
-FROM oven/bun:latest
+FROM oven/bun:alpine AS base
+WORKDIR /usr/src/app
 
-WORKDIR /app
+FROM base AS install
+RUN mkdir -p /temp/dev
+COPY package.json /temp/dev/package.json
+RUN cd /temp/dev && bun install
 
-COPY package.json bun.lock ./
-COPY backend/package.json ./backend/package.json
-RUN bun install --frozen-lockfile
+RUN mkdir -p /temp/prod
+COPY package.json /temp/prod/package.json
+RUN cd /temp/prod && bun install --production
 
-COPY backend ./backend
+FROM base AS prerelease
+WORKDIR /usr/src/app
+COPY --from=install /temp/dev/node_modules ./node_modules
+COPY . .
+RUN bun run build
 
-WORKDIR /app/backend
+FROM base AS release
+WORKDIR /usr/src/app
+ENV NODE_ENV=production
+COPY --from=install /temp/prod/node_modules ./node_modules
+COPY --from=prerelease /usr/src/app/dist ./dist
+COPY --from=prerelease /usr/src/app/drizzle ./drizzle
+COPY --from=prerelease /usr/src/app/package.json ./package.json
 
-EXPOSE 5044
-
-CMD ["bun", "run", "src/index.ts"]
+USER bun
+EXPOSE 5044/tcp
+ENTRYPOINT ["bun", "run", "dist/index.js"]

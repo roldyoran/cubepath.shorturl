@@ -6,7 +6,7 @@ export function getOpenAPIDocument() {
 			version: "1.0.0",
 			description: "API del acortador de URLs con CubePath",
 		},
-		servers: [{ url: "http://localhost:3000" }],
+		servers: [{ url: "http://localhost:3000" }, { url: "http://localhost:5044" }],
 		paths: {
 			"/": {
 				get: {

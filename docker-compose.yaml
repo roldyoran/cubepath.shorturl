@@ -10,6 +10,40 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - cbpt-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cbpt-back
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgres://shorturl:shorturl@postgres:5432/shorturl
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5044:5044"
+    restart: unless-stopped
+    networks:
+      - cbpt-net
 
 volumes:
   postgres_data:
+
+networks:
+  cbpt-net:
+    driver: bridge

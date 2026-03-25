@@ -6,10 +6,7 @@ dist
 .gitignore
 .env
 **/.env
-.env.local
 .vscode
 .idea
 coverage
 **/*.log
-.DS_Store
-tests
