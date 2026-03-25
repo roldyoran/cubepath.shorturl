@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-95 -110 190 220" width="100%" height="100%">
+  <!-- El transform ajusta la altura matemáticamente para lograr la perspectiva isométrica perfecta -->
+  <g fill="#52D900" transform="matrix(1 0 0 0.577350269 0 0)">
+
+    <!-- Cubo Interior - Cara Superior -->
+    <polygon points="0,-12 48,-60 0,-108 -48,-60" />
+
+    <!-- Cubo Interior - Cara Izquierda -->
+    <polygon points="-6,6 -48,-36 -48,60 -6,102" />
+
+    <!-- Cubo Interior - Cara Derecha -->
+    <polygon points="6,6 48,-36 48,60 6,102" />
+
+    <!-- Anillo Exterior - Pieza Superior/Derecha (El bucle de la "P") -->
+    <!-- Comienza en el corte superior izquierdo, da la vuelta y termina en el corte inferior derecho -->
+    <polygon points="-60,-72 -84,-96 0,-180 84,-96 84,96 60,120 60,-72 0,-132" />
+
+    <!-- Anillo Exterior - Pieza Izquierda/Inferior (El tallo de la "P") -->
+    <!-- Comienza debajo del corte superior, baja por la izquierda y envuelve la punta inferior -->
+    <polygon points="-60,-48 -84,-72 -84,96 0,180 48,132 48,84 0,132 -60,72" />
+
+  </g>
+</svg>
