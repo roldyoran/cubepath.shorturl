@@ -1,5 +1,5 @@
 <template>
-  <Card class="result-card rounded-2xl p-4 mt-3" :class="animating ? 'focus-card' : ''">
+  <Card class="result-card rounded-2xl p-4 mt-3" :class="{ 'focus-card': animating, 'closing-card': closing }">
     <div class="flex items-start justify-between">
       <div class="flex items-center gap-2">
         <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
@@ -58,6 +58,7 @@ defineProps<{
 	shortUrl: string;
 	originalUrl?: string;
 	animating?: boolean;
+	closing?: boolean;
 }>();
 
 defineEmits<{
@@ -89,6 +90,21 @@ defineEmits<{
 	100% {
 		transform: translateY(0) scale(1);
 		box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+	}
+}
+
+.closing-card {
+	animation: focusOut 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes focusOut {
+	0% {
+		transform: translateY(0) scale(1);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(-12px) scale(0.98);
+		opacity: 0;
 	}
 }
 </style>

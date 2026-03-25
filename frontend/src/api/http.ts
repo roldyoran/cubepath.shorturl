@@ -6,7 +6,7 @@ export function getApiBaseUrl(): string {
 	const stored = localStorage.getItem("apiUrl");
 	return (
 		(envUrl && envUrl.length > 0 ? envUrl : stored) ||
-		"https://shorturl.roldyoran.workers.dev"
+		"http://localhost:5044"
 	);
 }
 

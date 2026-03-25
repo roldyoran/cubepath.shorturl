@@ -107,7 +107,7 @@
         </Dialog>
 
         <Button variant="ghost" size="sm" as-child class="hidden sm:flex items-center gap-1.5 px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted">
-          <a href="https://github.com/roldyoran/shorturl" target="_blank">
+          <a href="https://github.com/roldyoran/cubepath.shorturl" target="_blank">
             <Github class="w-3.5 h-3.5" />
             <span class="font-mono text-[10px] tracking-wider">GITHUB</span>
           </a>

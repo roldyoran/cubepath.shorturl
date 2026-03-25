@@ -16,16 +16,16 @@
             <span>{{ attempts.toLocaleString() }} URLs</span>
           </div>
         </div>
-        
+
         <!-- Stack y GitHub -->
         <div class="flex items-center justify-between">
           <div class="flex flex-wrap gap-1">
-            <Badge variant="outline" class="text-xs py-0 px-2">Cloudflare Workers</Badge>
+            <Badge variant="outline" class="text-xs py-0 px-2">CUBEPATH</Badge>
             <Badge variant="secondary" class="text-xs py-0 px-2">Vue 3</Badge>
           </div>
-          <a 
-            href="https://github.com/roldyoran" 
-            target="_blank" 
+          <a
+            href="https://github.com/roldyoran"
+            target="_blank"
             rel="noopener noreferrer"
             class="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 hover:underline transition-all"
           >
@@ -33,7 +33,7 @@
             <span>@roldyoran</span>
           </a>
         </div>
-        
+
         <!-- Copyright -->
         <div class="text-center">
           <p class="text-xs text-muted-foreground">
@@ -54,7 +54,7 @@
               <h3 class="font-bold text-base">ShortURL</h3>
             </div>
             <p class="text-xs text-muted-foreground leading-relaxed">
-              Acortador de URLs rápido y seguro. 
+              Acortador de URLs rápido y seguro.
               <span class="inline-flex items-center gap-1">
                 <Zap class="w-3 h-3" />
                 Optimizado para velocidad.
@@ -91,8 +91,7 @@
               <h4 class="text-xs font-semibold text-foreground">Backend</h4>
             </div>
             <div class="flex flex-wrap gap-1">
-              <Badge variant="outline" class="text-xs py-0 px-2 hover:bg-primary/5 transition-colors">Cloudflare Workers</Badge>
-              <Badge variant="outline" class="text-xs py-0 px-2 hover:bg-primary/5 transition-colors">D1</Badge>
+              <Badge variant="outline" class="text-xs py-0 px-2 hover:bg-primary/5 transition-colors">CUBEPATH</Badge>
               <Badge variant="outline" class="text-xs py-0 px-2 hover:bg-primary/5 transition-colors">Hono.js</Badge>
               <Badge variant="outline" class="text-xs py-0 px-2 hover:bg-primary/5 transition-colors">Zod</Badge>
             </div>
@@ -101,9 +100,9 @@
           <!-- Enlaces -->
           <div class="space-y-3">
             <div class="space-y-2">
-              <a 
-                href="https://github.com/roldyoran" 
-                target="_blank" 
+              <a
+                href="https://github.com/roldyoran"
+                target="_blank"
                 rel="noopener noreferrer"
                 class="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-all duration-300 group hover:underline "
               >
@@ -124,7 +123,7 @@
             <p class="text-xs text-muted-foreground">
               &copy; {{ new Intl.DateTimeFormat('es-ES', { year: 'numeric' }).format(new Date()) }} ShortURL • API & Frontend
             </p>
-            
+
             <div class="flex items-center gap-4">
               <div class="flex items-center gap-1.5">
                 <div class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></div>
@@ -133,7 +132,7 @@
                   {{ attempts.toLocaleString() }} URLs
                 </span>
               </div>
-              
+
               <div class="flex items-center gap-1">
                 <div class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></div>
                 <span class="text-xs text-muted-foreground">v1.0.0</span>

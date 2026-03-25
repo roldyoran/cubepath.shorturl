@@ -2,22 +2,18 @@
   <section class="relative min-h-[calc(100vh-180px)] flex flex-col items-center justify-center px-4 pt-6 pb-10 sm:pt-0 sm:pb-8 overflow-hidden">
     <div class="hero-tag flex items-center gap-2 mb-6">
       <Badge variant="secondary" class="text-xs font-medium">
-        <svg class="w-4 h-4 mr-1 inline" viewBox="0 0 256 231" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path fill="currentColor" d="m65.82 3.324 30.161 54.411-27.698 49.857a16.003 16.003 0 0 0 0 15.573l27.698 49.98-30.16 54.411a32.007 32.007 0 0 1-13.542-12.74L4.27 131.412a32.13 32.13 0 0 1 0-32.007l48.01-83.403a32.007 32.007 0 0 1 13.542-12.68Z"/>
-          <path fill="currentColor" d="m203.696 16.003 48.01 83.403c5.725 9.848 5.725 22.159 0 32.007l-48.01 83.402a32.007 32.007 0 0 1-27.698 16.004h-48.01l59.705-107.654a16.003 16.003 0 0 0 0-15.511L127.988 0h48.01a32.007 32.007 0 0 1 27.698 16.003Z" opacity="0.6"/>
-          <path fill="currentColor" d="M79.978 230.819c-4.924 0-9.849-1.17-14.157-3.263l59.212-106.792a11.045 11.045 0 0 0 0-10.71L65.821 3.324A32.007 32.007 0 0 1 79.978 0h48.01l59.705 107.654a16.003 16.003 0 0 1 0 15.51L127.988 230.82h-48.01Z" opacity="0.8"/>
-        </svg>
-        Powered by Cloudflare Workers
+        <img src="/cubepath.svg" class="w-4 h-4 mr-1 inline dark:brightness-0 dark:invert" alt="CUBEPATH" />
+        Powered by CUBEPATH VPS
       </Badge>
     </div>
 
-    <h1 class="hero-h1 font-display font-extrabold text-center leading-[1.0] mb-3 tracking-tight w-full max-w-3xl text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground">
+    <h1 class="hero-h1 font-display font-extrabold text-center leading-[1.0] mb-3 tracking-tight w-full max-w-4xl text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground">
       Acorta tu URL<br/>
       <span class="text-primary">al instante.</span>
     </h1>
 
     <p class="hero-sub font-body text-center mb-4 max-w-md text-sm sm:text-base text-muted-foreground">
-      Simple · Rápido · Gratis · Construido sobre infraestructura Edge
+      Simple · Rápido · Gratis · Construido sobre infraestructura de CUBEPATH
     </p>
 
     <div class="hero-svc flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-6 mt-1">
@@ -99,10 +95,10 @@
               v-model="alias"
               @input="onAliasInput"
               @keydown.enter.prevent="handleShorten"
-              maxlength="6"
+              maxlength="9"
               pattern="[a-z0-9]*"
               inputmode="text"
-              placeholder="alias - máximo 6 caracteres (a-z0-9)"
+              placeholder="alias - máximo 9 caracteres (a-z0-9)"
               class="w-full rounded-lg px-3 py-1.5 text-sm font-mono"
             />
           </div>
@@ -115,8 +111,9 @@
         :shortUrl="shortUrl"
         :originalUrl="originalUrl"
         :animating="cardAnimating"
+        :closing="isClosing"
         @copy="copyShortUrl"
-        @close="shortUrl = ''; originalUrl = ''"
+        @close="handleCloseCard"
       />
     </div>
   </section>
@@ -156,10 +153,19 @@ const alias = ref("");
 const originalUrl = ref("");
 const resultCard = ref<HTMLElement | null>(null);
 const cardAnimating = ref(false);
+const isClosing = ref(false);
 
 const onAliasInput = (e: Event) => {
 	const val = (e.target as HTMLInputElement).value || "";
-	alias.value = val.replace(/[^a-z0-9]/g, "").slice(0, 6);
+	alias.value = val.replace(/[^a-z0-9]/g, "").slice(0, 9);
+};
+
+const handleCloseCard = async () => {
+	isClosing.value = true;
+	await new Promise((resolve) => setTimeout(resolve, 400));
+	shortUrl.value = "";
+	originalUrl.value = "";
+	isClosing.value = false;
 };
 
 const customAlias = ref(false);
