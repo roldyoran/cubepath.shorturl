@@ -10,7 +10,7 @@ export const corsMiddleware = (options?: {
 		const defaultOptions = {
 			origin: "*",
 			methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-			allowedHeaders: ["Content-Type", "Authorization"],
+			allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
 			maxAge: 86400,
 		};
 

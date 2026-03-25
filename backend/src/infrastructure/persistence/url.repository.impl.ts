@@ -4,7 +4,7 @@ import { urlsTable } from "@/db/schema";
 import type { CreateUrlInput, UrlEntity } from "@/domain/url/url.entity";
 import type { UrlRepositoryPort } from "@/domain/url/url.repository.port";
 
-function generateShortCode(length = 6): string {
+function generateShortCode(length = 9): string {
 	const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 	let result = "";
 	for (let i = 0; i < length; i++) {
