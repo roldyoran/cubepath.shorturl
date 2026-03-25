@@ -1,0 +1,24 @@
+{
+  "name": "shorturl",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "packageManager": "bun@1.2.15",
+  "scripts": {
+    "dev:front": "bun --cwd frontend dev",
+    "dev:back": "bun --cwd backend dev",
+    "build:front": "bun --cwd frontend build",
+    "build:back": "bun --cwd backend build",
+    "check:front": "bun --cwd frontend check",
+    "format:front": "bun --cwd frontend format",
+    "lint:front": "bun --cwd frontend lint"
+  },
+  "devDependencies": {
+    "shadcn-vue": "^2.4.3"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.4"
+  }
+}

@@ -1,0 +1,27 @@
+{
+	"name": "backend",
+	"scripts": {
+		"dev": "bun --env --hot src/index.ts",
+		"db:generate": "drizzle-kit generate",
+		"db:push": "drizzle-kit push",
+		"db:migrate": "drizzle-kit migrate",
+		"test": "bun test",
+		"test:unit": "bun test tests/unit",
+		"format": "bunx --bun @biomejs/biome format --write"
+	},
+	"dependencies": {
+		"@hono/zod-openapi": "^1.2.3",
+		"@hono/zod-validator": "^0.7.6",
+		"@scalar/hono-api-reference": "^0.10.4",
+		"drizzle-orm": "^0.45.1",
+		"hono": "^4.12.9",
+		"pg": "^8.20.0",
+		"zod": "^3.24.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.8",
+		"@types/bun": "latest",
+		"@types/pg": "^8.20.0",
+		"drizzle-kit": "^0.31.10"
+	}
+}
