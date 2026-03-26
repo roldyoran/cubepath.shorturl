@@ -6,7 +6,23 @@ import { toast } from "vue-sonner";
 export const useCopyToClipboard = () => {
 	const copyToClipboard = async (text: string, customMessage?: string) => {
 		try {
-			await navigator.clipboard.writeText(text);
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				await navigator.clipboard.writeText(text);
+			} else {
+				const textArea = document.createElement("textarea");
+				textArea.value = text;
+				textArea.style.position = "fixed";
+				textArea.style.left = "-999999px";
+				textArea.style.top = "-999999px";
+				document.body.appendChild(textArea);
+				textArea.focus();
+				textArea.select();
+				const result = document.execCommand("copy");
+				document.body.removeChild(textArea);
+				if (!result) {
+					throw new Error("Fallback copy failed");
+				}
+			}
 			toast.success(customMessage || "¡Enlace copiado al portapapeles!", {
 				description: "El enlace se ha copiado correctamente",
 			});

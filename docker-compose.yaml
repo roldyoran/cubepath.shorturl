@@ -31,13 +31,13 @@ services:
 
   backend:
     # Descomenta las líneas de arriba para usar imagen de Docker Hub:
-    # image: roldyoran/cubepath-shorturl-backend:latest
-    # pull_policy: always
+    image: roldyoran/cubepath-shorturl-backend:latest
+    pull_policy: always
 
     # Construcción local (comenta esto en producción):
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    #build:
+    #  context: ./backend
+    #  dockerfile: Dockerfile
 
     container_name: cbpt-back
     env_file:
@@ -62,19 +62,19 @@ services:
 
   frontend:
     # Descomenta las líneas de arriba para usar imagen de Docker Hub:
-    # image: roldyoran/cubepath-shorturl-frontend:latest
-    # pull_policy: always
+    image: roldyoran/cubepath-shorturl-frontend:latest
+    pull_policy: always
 
     # Construcción local (comenta esto en producción):
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    #build:
+    #  context: ./frontend
+    #  dockerfile: Dockerfile
 
     env_file:
       - .env
     container_name: cbpt-front
     ports:
-      - "5173:80"
+      - "5173:5173"
     restart: unless-stopped
     networks:
       - cbpt-net

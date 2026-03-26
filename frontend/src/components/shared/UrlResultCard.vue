@@ -10,20 +10,22 @@
       </Button>
     </div>
 
-    <div class="flex items-center gap-2 mt-3">
-      <div class="flex-1 flex items-center gap-3 rounded-xl px-4 py-2.5 bg-card border border-primary/20">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-3">
+      <div class="flex-1 min-w-0 flex items-center gap-3 rounded-xl px-4 py-2.5 bg-card border border-primary/20">
         <Link class="w-4 h-4 flex-shrink-0 text-primary" />
         <span class="font-mono text-xs text-primary truncate">{{ shortUrl }}</span>
       </div>
-      <Button variant="outline" size="sm" @click="$emit('copy')" class="h-10 px-3 font-mono text-[10px] tracking-wider">
-        <Copy class="w-3.5 h-3.5 mr-1.5" />
-        COPIAR
-      </Button>
-      <Button variant="outline" size="sm" as-child class="h-10 w-10 p-0">
-        <a :href="shortUrl" target="_blank" rel="noopener noreferrer" aria-label="Abrir URL acortada">
-          <ExternalLink class="w-3.5 h-3.5" />
-        </a>
-      </Button>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <Button variant="outline" size="sm" @click="$emit('copy')" class="h-10 px-3 font-mono text-[10px] tracking-wider whitespace-nowrap">
+          <Copy class="w-3.5 h-3.5 mr-1.5" />
+          COPIAR
+        </Button>
+        <Button variant="outline" size="sm" as-child class="h-10 w-10 p-0 flex-shrink-0">
+          <a :href="shortUrl" target="_blank" rel="noopener noreferrer" aria-label="Abrir URL acortada">
+            <ExternalLink class="w-3.5 h-3.5" />
+          </a>
+        </Button>
+      </div>
     </div>
 
     <div v-if="originalUrl" class="mt-3">
