@@ -4,7 +4,7 @@
     <div class="bg-glow-center" aria-hidden="true" />
     <Toaster class="pointer-events-auto" />
 
-    <NavbarHeader :attempts="attempts" />
+    <NavbarHeader />
 
     <main id="main-content" class="flex-grow container mx-auto px-4 py-4 relative z-10" tabindex="-1">
       <TooltipProvider>
@@ -112,7 +112,7 @@
       </TooltipProvider>
     </main>
 
-    <FooterComponent :attempts="attempts" />
+    <FooterComponent />
   </div>
 </template>
 
@@ -149,13 +149,11 @@ useColorMode();
 const activeTab = ref<Tab>(
 	urlStore.currentTab === "shorten" ? "info" : (urlStore.currentTab as Tab),
 );
-const attempts = ref(urlStore.urlCount);
 
 onMounted(() => {
 	urlStore.initialize();
 	activeTab.value =
 		urlStore.currentTab === "shorten" ? "info" : (urlStore.currentTab as Tab);
-	attempts.value = urlStore.urlCount;
 });
 
 import { onMounted } from "vue";

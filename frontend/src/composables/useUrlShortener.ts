@@ -18,15 +18,6 @@ export const useUrlShortener = () => {
 		shortUrl?: string;
 		originalUrl?: string;
 	}> => {
-		// Verificar si puede usar el servicio
-		if (!urlStore.canUseService) {
-			toast.error("Límite de intentos alcanzado", {
-				description:
-					"Ha alcanzado el límite máximo de 3 intentos. Los intentos se reinician cada 24 horas.",
-			});
-			return { success: false };
-		}
-
 		try {
 			urlStore.isLoading = true;
 
@@ -46,9 +37,6 @@ export const useUrlShortener = () => {
 			);
 
 			if (data && data.shortCode) {
-				// Decrementar intentos (solo para no-admin)
-				urlStore.decrementAttempts();
-
 				// Agregar URL al store
 				urlStore.addUrl(data.originalUrl, data.shortCode);
 

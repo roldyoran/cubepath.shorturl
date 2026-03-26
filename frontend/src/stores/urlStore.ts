@@ -30,7 +30,7 @@ export const useUrlStore = defineStore("urlStore", () => {
 	);
 	const urlCount = computed(() => savedUrls.value.length);
 	const canUseService = computed(
-		() => userSession.value.isAdmin || hasRemainingAttempts.value,
+		() => true,
 	);
 
 	// Funciones de utilidad

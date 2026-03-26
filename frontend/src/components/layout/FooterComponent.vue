@@ -148,11 +148,8 @@
 <script setup lang="ts">
 import { Link, Github, Heart, Code2, Zap } from "lucide-vue-next";
 import { Badge } from "@/components/ui/badge";
+import { useUrlStore } from "@/stores/urlStore";
 
-// Props
-interface Props {
-	attempts: number;
-}
-
-defineProps<Props>();
+const urlStore = useUrlStore();
+const attempts = urlStore.urlCount;
 </script>

@@ -12,13 +12,7 @@
         <div class="w-2 h-2 rounded-full bg-primary animate-pulse ml-1"></div>
       </div>
 
-      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-card/60">
-        <span class="font-mono text-[10px] tracking-wider text-muted-foreground">URLS ACORTADAS</span>
-        <span class="font-mono text-[10px] tracking-wider text-primary font-bold">{{ attempts }}</span>
-        <div class="w-px h-3 bg-border"></div>
-        <span class="font-mono text-[10px] tracking-wider text-muted-foreground">INTENTOS</span>
-        <span class="font-mono text-[10px] tracking-wider text-foreground">{{ remainingAttempts }}</span>
-      </div>
+
 
       <div class="flex-1"></div>
 
@@ -49,24 +43,6 @@
                 </DialogContent>
               </Dialog>
 
-              <Dialog>
-                <DialogTrigger as-child>
-                  <Button variant="outline" class="w-full justify-start gap-2">
-                    <User class="w-4 h-4" />
-                    Admin
-                  </Button>
-                </DialogTrigger>
-                <DialogContent class="max-w-md">
-                  <div class="space-y-4">
-                    <Label for="admin-pass-mobile">Contraseña Admin</Label>
-                    <Input id="admin-pass-mobile" v-model="adminPassword" type="password" placeholder="Ingresa contraseña" />
-                    <div class="flex justify-end">
-                      <Button @click="submitAdmin">Iniciar sesión</Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-
               <Button variant="outline" as-child class="w-full justify-start gap-2">
                 <a href="https://github.com/roldyoran/shorturl" target="_blank">
                   <Github class="w-4 h-4" />
@@ -88,24 +64,6 @@
           </DialogContent>
         </Dialog>
 
-        <Dialog>
-          <DialogTrigger as-child>
-            <Button variant="ghost" size="sm" class="hidden sm:flex items-center gap-1.5 px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted">
-              <User class="w-3.5 h-3.5" />
-              <span class="font-mono text-[10px] tracking-wider">ADMIN</span>
-            </Button>
-          </DialogTrigger>
-          <DialogContent class="max-w-md">
-            <div class="space-y-4">
-              <Label for="admin-pass">Contraseña Admin</Label>
-              <Input id="admin-pass" v-model="adminPassword" type="password" placeholder="Ingresa contraseña" />
-              <div class="flex justify-end">
-                <Button @click="submitAdmin">Iniciar sesión</Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-
         <Button variant="ghost" size="sm" as-child class="hidden sm:flex items-center gap-1.5 px-3 h-8 text-muted-foreground hover:text-foreground hover:bg-muted">
           <a href="https://github.com/roldyoran/cubepath.shorturl" target="_blank">
             <Github class="w-3.5 h-3.5" />
@@ -118,7 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import { Link, Info, Github, User, Menu } from "lucide-vue-next";
+import { Link, Info, Github, Menu } from "lucide-vue-next";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
 	Drawer,
@@ -131,35 +89,4 @@ import {
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "./ThemeToggle.vue";
 import ApiConfigDialog from "@/components/config/ApiConfigDialog.vue";
-import { ref, computed } from "vue";
-import { useUrlStore } from "@/stores/urlStore";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "vue-sonner";
-
-defineProps<{
-	attempts: number;
-}>();
-
-const urlStore = useUrlStore();
-const adminPassword = ref("");
-const ADMIN_PASS = import.meta.env.VITE_ADMIN_PASS as string | undefined;
-const remainingAttempts = computed(
-	() => urlStore.userSession?.remainingAttempts ?? 0,
-);
-
-function submitAdmin() {
-	if (adminPassword.value === ADMIN_PASS && ADMIN_PASS) {
-		urlStore.setAdminStatus(true);
-		toast.success("Modo admin activado", {
-			description: "Tienes 999 intentos restantes.",
-		});
-	} else {
-		urlStore.setAdminStatus(false);
-		toast.error("Contraseña incorrecta", {
-			description: "La contraseña admin es incorrecta.",
-		});
-	}
-	adminPassword.value = "";
-}
 </script>
