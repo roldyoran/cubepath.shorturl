@@ -23,10 +23,22 @@ services:
     networks:
       - cbpt-net
 
+  # -------------------------------------------------------
+  # OPCIÓN 1: Usar imágenes de Docker Hub (ya construidas)
+  # Descomenta las líneas de "image" y comenta el "build"
+  # -------------------------------------------------------
+  # image: roldyoran/cubepath-shorturl-backend:latest
+  # -------------------------------------------------------
+
   backend:
+    # Descomenta para usar imagen de Docker Hub:
+    # image: roldyoran/cubepath-shorturl-backend:latest
+
+    # Construir desde código local (comenta "image" arriba):
     build:
       context: ./backend
       dockerfile: Dockerfile
+
     container_name: cbpt-back
     env_file:
       - .env
@@ -42,10 +54,22 @@ services:
     networks:
       - cbpt-net
 
+  # -------------------------------------------------------
+  # OPCIÓN 1: Usar imágenes de Docker Hub (ya construidas)
+  # Descomenta las líneas de "image" y comenta el "build"
+  # -------------------------------------------------------
+  # image: roldyoran/cubepath-shorturl-frontend:latest
+  # -------------------------------------------------------
+
   frontend:
+    # Descomenta para usar imagen de Docker Hub:
+    # image: roldyoran/cubepath-shorturl-frontend:latest
+
+    # Construir desde código local (comenta "image" arriba):
     build:
       context: ./frontend
       dockerfile: Dockerfile
+
     env_file:
       - .env
     container_name: cbpt-front
