@@ -19,7 +19,7 @@ app.use(logger());
 
 app.get("/", (c) => {
 	return c.json({
-		message: "Bienvenido al acortador de URLs creado por Roldyoran, este proyecto utiliza Hono, TypeScript y Bun, alojado en CubePath mediante una VPS nao. Gracias por visitarlo!",
+		message: "Bienvenido al acortador de URLs creado por Roldyoran, este proyecto utiliza Hono, TypeScript y Bun, alojado en CubePath mediante una VPS gp.nano. Gracias por visitarlo!",
 		version: "1.0.0",
 	});
 });
