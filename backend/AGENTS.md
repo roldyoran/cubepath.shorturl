@@ -44,6 +44,13 @@ backend/
 │   ├── application/url/    # Casos de uso
 │   ├── infrastructure/     # Implementaciones
 │   ├── presentation/http/  # Rutas API
+│   │   ├── docs/           # Documentación (OpenAPI, Swagger, Scalar)
+│   │   │   ├── index.ts
+│   │   │   ├── openapi/
+│   │   │   ├── scalar/
+│   │   │   └── swagger/
+│   │   ├── redirect/       # Redirecciones
+│   │   └── v1/             # API v1
 │   ├── db/                 # Schema Drizzle
 │   └── index.ts            # Entry point
 ├── drizzle/                 # Migraciones SQL
@@ -91,6 +98,10 @@ bun run format           # Formatea con Biome
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
+| `GET` | `/openapi.json` | Documento OpenAPI |
+| `GET` | `/docs` | Swagger UI |
+| `GET` | `/swagger` | Swagger UI (alternativo) |
+| `GET` | `/scalar` | Scalar API Reference |
 | `POST` | `/v1/urls` | Crear URL corta |
 | `GET` | `/v1/urls` | Listar todas |
 | `GET` | `/v1/urls/:shortCode` | Obtener por código |

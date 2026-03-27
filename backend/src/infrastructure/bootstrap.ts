@@ -12,7 +12,9 @@ function checkEnvVars() {
 	}
 
 	if (missingVars.length > 0) {
-		console.error(`[ENV] Variables de entorno faltantes: ${missingVars.join(", ")}`);
+		console.error(
+			`[ENV] Variables de entorno faltantes: ${missingVars.join(", ")}`,
+		);
 		process.exit(1);
 	}
 
@@ -35,13 +37,18 @@ export async function startServer() {
 
 	while (attempt < maxAttempts) {
 		try {
-			console.log(`[INIT] Attempt ${attempt + 1} to run database migrations...`);
+			console.log(
+				`[INIT] Attempt ${attempt + 1} to run database migrations...`,
+			);
 			await runMigrations();
 			console.log("[INIT] Database migrations completed successfully");
 			return;
 		} catch (error) {
 			attempt++;
-			console.error(`[INIT] Migration attempt ${attempt} failed:`, error?.message ?? error);
+			console.error(
+				`[INIT] Migration attempt ${attempt} failed:`,
+				error?.message ?? error,
+			);
 			if (attempt >= maxAttempts) {
 				console.error("[INIT] Exceeded max migration attempts, exiting.");
 				process.exit(1);

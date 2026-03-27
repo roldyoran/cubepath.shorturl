@@ -2,11 +2,17 @@ export function getOpenAPIDocument() {
 	return {
 		openapi: "3.1.0",
 		info: {
-			title: "ShortURL API",
+			title: "Cubepath.Shorturl API",
 			version: "1.0.0",
-			description: "API del acortador de URLs con CubePath",
+			description: "API acortadora de URLs con Infraestructura CubePath",
 		},
-		servers: [{ url: "http://localhost:3000" }, { url: "http://localhost:5044" }],
+		servers: [
+			{
+				url: "http://cubepathshorturl-zyojcm-c8fd35-144-225-147-24.traefik.me",
+			},
+			{ url: "http://localhost:5044" },
+			{ url: "http://localhost:3000" },
+		],
 		paths: {
 			"/": {
 				get: {
@@ -71,7 +77,11 @@ export function getOpenAPIDocument() {
 									required: ["originalUrl"],
 									properties: {
 										originalUrl: { type: "string", format: "uri" },
-										shortCode: { type: "string", maxLength: 9, pattern: "^[a-z0-9]+$" },
+										shortCode: {
+											type: "string",
+											maxLength: 9,
+											pattern: "^[a-z0-9]+$",
+										},
 									},
 								},
 							},
@@ -139,7 +149,8 @@ export function getOpenAPIDocument() {
 				get: {
 					tags: ["Redirect"],
 					summary: "Redireccionar a URL original",
-					description: "Redirige al usuario a la URL original asociada al shortCode",
+					description:
+						"Redirige al usuario a la URL original asociada al shortCode",
 					parameters: [
 						{
 							name: "shortCode",

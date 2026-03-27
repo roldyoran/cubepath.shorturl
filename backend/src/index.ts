@@ -1,11 +1,10 @@
 import { Hono } from "hono";
 import { logger } from "hono/logger";
-import { Scalar } from "@scalar/hono-api-reference";
 import { startServer } from "@/infrastructure/bootstrap";
 import { onError } from "@/infrastructure/http/error-handler";
 import { redirectRoutes } from "@/presentation/http/redirect";
 import { v1Router } from "@/presentation/http/v1";
-import { getOpenAPIDocument } from "@/presentation/http/openapi";
+import { docsRouter } from "@/presentation/http/docs/docs.routes";
 import { checkEnvMiddleware, type AppEnv } from "@/utils/context";
 import { corsMiddleware } from "@/utils/cors-middleware";
 
@@ -19,18 +18,18 @@ app.use(logger());
 
 app.get("/", (c) => {
 	return c.json({
-		message: "Bienvenido al acortador de URLs creado por Roldyoran, este proyecto utiliza Hono, TypeScript y Bun, alojado en CubePath mediante una VPS gp.nano. Gracias por visitarlo!",
+		message:
+			"Bienvenido al acortador de URLs creado por Roldyoran, este proyecto utiliza Hono, TypeScript y Bun, alojado en CubePath mediante una VPS gp.nano. Gracias por visitarlo!",
 		version: "1.0.0",
+		documentation: {
+			openapi: "/openapi.json",
+			swagger: "/docs",
+			scalar: "/scalar",
+		},
 	});
 });
 
-app.get("/openapi.json", (c) => {
-	return c.json(getOpenAPIDocument());
-});
-
-app.get("/scalar", Scalar({ url: "/openapi.json" }));
-app.get("/docs", Scalar({ url: "/openapi.json" }));
-
+app.route("/", docsRouter);
 app.route("/v1", v1Router);
 app.route("/", redirectRoutes);
 

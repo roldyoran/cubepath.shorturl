@@ -13,7 +13,7 @@ export class AppError extends Error {
 }
 
 export class UnauthorizedError extends AppError {
-	constructor(message = "No autorizado") {
+	constructor(message = "No autorizado, ingrese el BearerAuthToken") {
 		super(message, "UNAUTHORIZED");
 	}
 }
