@@ -23,61 +23,49 @@ services:
     networks:
       - cbpt-net
 
-  # -------------------------------------------------------
-  # OPCIÓN: Usar imágenes de Docker Hub (descomenta para producción)
-  # image: roldyoran/cubepath-shorturl-backend:latest
-  # pull_policy: always
-  # -------------------------------------------------------
+  # backend:
+  #   # Descomenta las líneas para usar imagen de Docker Hub:
+  #   image: roldyoran/cubepath-shorturl-backend:latest
+  #   pull_policy: always
 
-  backend:
-    # Descomenta las líneas de arriba para usar imagen de Docker Hub:
-    image: roldyoran/cubepath-shorturl-backend:latest
-    pull_policy: always
+  #   # Construcción local (comenta esto en producción):
+  #   #build:
+  #   #  context: ./backend
+  #   #  dockerfile: Dockerfile
 
-    # Construcción local (comenta esto en producción):
-    #build:
-    #  context: ./backend
-    #  dockerfile: Dockerfile
+  #   container_name: cbpt-back
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     DATABASE_URL: postgres://shorturl:shorturl@postgres:5432/shorturl
+  #     API_PORT: ${API_PORT}
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - "5044:5044"
+  #   restart: unless-stopped
+  #   networks:
+  #     - cbpt-net
 
-    container_name: cbpt-back
-    env_file:
-      - .env
-    environment:
-      DATABASE_URL: postgres://shorturl:shorturl@postgres:5432/shorturl
-      API_PORT: ${API_PORT}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - "5044:5044"
-    restart: unless-stopped
-    networks:
-      - cbpt-net
+  # frontend:
+  #   # Descomenta las líneas de para usar imagen de Docker Hub:
+  #   image: roldyoran/cubepath-shorturl-frontend:latest
+  #   pull_policy: always
 
-  # -------------------------------------------------------
-  # OPCIÓN: Usar imágenes de Docker Hub (descomenta para producción)
-  # image: roldyoran/cubepath-shorturl-frontend:latest
-  # pull_policy: always
-  # -------------------------------------------------------
+  #   # Construcción local (comenta esto en producción):
+  #   #build:
+  #   #  context: ./frontend
+  #   #  dockerfile: Dockerfile
 
-  frontend:
-    # Descomenta las líneas de arriba para usar imagen de Docker Hub:
-    image: roldyoran/cubepath-shorturl-frontend:latest
-    pull_policy: always
-
-    # Construcción local (comenta esto en producción):
-    #build:
-    #  context: ./frontend
-    #  dockerfile: Dockerfile
-
-    env_file:
-      - .env
-    container_name: cbpt-front
-    ports:
-      - "5173:5173"
-    restart: unless-stopped
-    networks:
-      - cbpt-net
+  #   env_file:
+  #     - .env
+  #   container_name: cbpt-front
+  #   ports:
+  #     - "5173:5173"
+  #   restart: unless-stopped
+  #   networks:
+  #     - cbpt-net
 
 volumes:
   postgres_data:

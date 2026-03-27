@@ -9,8 +9,7 @@
 		"preview": "vite preview",
 		"check": "bun biome check .",
 		"format": "bun biome format --write .",
-		"lint": "bun biome lint --write .",
-	"release": "echo 'Usage: VITE_API_BASE_URL=url VITE_API_KEY=key VITE_ADMIN_PASS=pass bun run release' && docker buildx build -t roldyoran/cubepath-shorturl-frontend:$npm_package_version -t roldyoran/cubepath-shorturl-frontend:latest --build-arg VITE_API_BASE_URL --build-arg VITE_API_KEY --build-arg VITE_ADMIN_PASS --push ."
+		"lint": "bun biome lint --write ."
 	},
 	"dependencies": {
 		"@iconify/vue": "^5.0.0",
