@@ -48,7 +48,7 @@
             </svg>
             URL ORIGINAL
           </Label>
-          <AttemptsBadge :attempts="attempts" />
+
         </div>
 
         <form @submit.prevent="handleShorten" class="flex flex-col sm:flex-row gap-2 mb-2.5">
@@ -133,7 +133,7 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import UrlResultCard from "@/components/shared/UrlResultCard.vue";
-import AttemptsBadge from "@/components/shared/AttemptsBadge.vue";
+
 import { useUrlStore } from "@/stores/urlStore";
 import { useUrlShortener } from "@/composables/useUrlShortener";
 import { useCopyToClipboard } from "@/composables/useCopyToClipboard";
@@ -171,7 +171,7 @@ const handleCloseCard = async () => {
 const customAlias = ref(false);
 const shortUrl = ref("");
 
-const attempts = computed(() => urlStore.userSession.remainingAttempts);
+
 
 const urlSchema = z
 	.string()

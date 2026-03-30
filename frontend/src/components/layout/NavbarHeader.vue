@@ -77,7 +77,7 @@ onBeforeUnmount(() => {
 
 <template>
 	<header
-		class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80"
+		class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur"
 	>
 		<div class="container mx-auto h-16 px-4">
 			<div class="flex h-full items-center justify-between gap-3">
