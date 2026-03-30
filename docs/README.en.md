@@ -98,6 +98,10 @@ CubePath is a technology infrastructure provider with its own data centers in st
 
    ![CubePath Dashboard - One Click App](./screenshots/cubepath-dashboard-one-click-app.png)
 
+  And the **Virtual Machines** view in CubePath:
+
+  ![CubePath Dashboard - Virtual Machines](./screenshots/cubepath-dashboard.png)
+
 2. **Configure Traefik**: Dokploy automatically configures Traefik as a reverse proxy with automatic SSL
 
 3. **Deploy the application**: Via the Dokploy web interface:

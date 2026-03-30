@@ -98,6 +98,10 @@ CubePath es un proveedor de infraestructura tecnológica y centros de datos prop
 
    ![CubePath Dashboard - One Click App](./docs/screenshots/cubepath-dashboard-one-click-app.png)
 
+  Y la vista de **Virtual Machines** en CubePath:
+
+  ![CubePath Dashboard - Virtual Machines](./docs/screenshots/cubepath-dashboard.png)
+
 2. **Configura Traefik**: Dokploy configura automáticamente Traefik como proxy inverso con SSL automático
 
 3. **Despliega la aplicación**: Via la interfaz web de Dokploy:
