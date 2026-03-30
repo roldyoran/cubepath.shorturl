@@ -2,18 +2,44 @@
 
 <p align="center">by roldyoran</p>
 
-> **English**: [Documentation in English](./docs/README.md)
+> **English**: [Documentation in English](./docs/README.en.md)
 
-> **Nota**: Este repositorio se enfoca principalmente en el **backend** (API de acortador de URLs). El frontend es una aplicación simple en Vue 3 usada para probar la API con una interfaz de usuario agradable, pero no es el enfoque principal del proyecto.
+> **Nota**: Este proyecto está organizado como un **monorepositorio** que integra backend y frontend. No obstante, el enfoque principal se encuentra en el **backend** (API de acortador de URLs). El frontend es una aplicación simple en Vue 3 usada para probar la API con una interfaz de usuario agradable, pero no constituye el foco principal del proyecto.
 
 ---
 
 ## Descripción
 
-CubePath.ShortURL es un acortador de URLs construido con tecnologías modernas. Te permite crear URLs cortas y fáciles de recordar que redirigen a otras más largas. El proyecto consiste en:
+CubePath.ShortURL es una solución de acortamiento y gestión de enlaces orientada a API. El núcleo del proyecto está en un backend diseñado para ofrecer consistencia funcional, trazabilidad operativa y una separación clara de responsabilidades.
 
-- **Backend**: Una API REST construida con Hono, TypeScript y Bun
-- **Frontend**: Una aplicación Vue 3 con una interfaz de usuario amigable
+El proyecto consiste en:
+
+- **Backend**: API REST construida con Hono, TypeScript, Bun, PostgreSQL y Drizzle ORM.
+- **Frontend**: Aplicación en Vue 3 para interactuar con la API y validar flujos de uso en una interfaz web.
+
+### Alcance funcional del backend
+
+La API implementa un flujo completo para el ciclo de vida de URLs cortas:
+
+- **Creación de URLs** con `shortCode` automático o personalizado.
+- **Idempotencia por URL original**: si una URL ya existe, se devuelve el registro existente en lugar de duplicarlo.
+- **Prevención de colisiones** para `shortCode` personalizados, con error de negocio explícito cuando ya está en uso.
+- **Consulta de URLs** por listado general y por `shortCode` específico.
+- **Redirección HTTP 302** por `shortCode`, con incremento del contador de visitas en cada acceso.
+- **Operaciones administrativas protegidas** para eliminar una URL o vaciar el conjunto completo de registros.
+
+### Diseño técnico del backend
+
+El backend sigue un enfoque de **arquitectura hexagonal**, organizado en capas de dominio, aplicación, infraestructura y presentación. Este diseño permite mantener la lógica de negocio desacoplada del framework HTTP y de la persistencia, facilitando el mantenimiento y la evolución del servicio.
+
+Además, incorpora prácticas de calidad y operación relevantes para entornos reales:
+
+- **Validación de entrada con Zod** para parámetros y cuerpos de petición.
+- **Manejo de errores estandarizado** mediante códigos de dominio y mapeo consistente a estados HTTP.
+- **Autenticación por API key (Bearer Token)** en rutas administrativas.
+- **Documentación OpenAPI** disponible en formatos Swagger UI y Scalar.
+- **Inicialización robusta del servicio** con verificación de variables de entorno y ejecución de migraciones con reintentos exponenciales.
+- **Cobertura de casos de uso con pruebas unitarias**, incluyendo creación, consulta, redirección y eliminación.
 
 ### Demo en vivo
 

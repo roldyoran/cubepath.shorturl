@@ -4,16 +4,42 @@
 
 > **Español**: [Documentación en español](../README.md)
 
-> **Note**: This repository is primarily focused on the **backend** (URL shortener API). The frontend is a simple Vue 3 application used to test the API with a nice UI, but it's not the main focus of the project.
+> **Note**: This project is organized as a **monorepo** that includes both backend and frontend. However, the primary focus is the **backend** (URL shortener API). The frontend is a simple Vue 3 application used to test the API with a user-friendly interface, but it is not the main focus of the project.
 
 ---
 
 ## Description
 
-CubePath.ShortURL is a URL shortener built with modern technologies. It allows you to create short, easy-to-remember URLs that redirect to longer ones. The project consists of:
+CubePath.ShortURL is an API-oriented solution for link shortening and URL management. The core of the project is a backend designed to provide functional consistency, operational traceability, and a clear separation of responsibilities.
 
-- **Backend**: A REST API built with Hono, TypeScript, and Bun
-- **Frontend**: A Vue 3 application with a user-friendly interface
+The project consists of:
+
+- **Backend**: REST API built with Hono, TypeScript, Bun, PostgreSQL, and Drizzle ORM.
+- **Frontend**: Vue 3 application used to interact with the API and validate usage flows through a web interface.
+
+### Backend Functional Scope
+
+The API implements a complete lifecycle for short URLs:
+
+- **URL creation** with automatic or custom `shortCode` values.
+- **Idempotency by original URL**: when a URL already exists, the existing record is returned instead of creating duplicates.
+- **Collision prevention** for custom `shortCode` values, with explicit domain errors when a value is already in use.
+- **URL retrieval** through a global listing and per-`shortCode` lookup.
+- **HTTP 302 redirection** by `shortCode`, with visit counter increment on every access.
+- **Protected administrative operations** to delete a single URL or clear all stored URLs.
+
+### Backend Technical Design
+
+The backend follows a **hexagonal architecture**, organized into domain, application, infrastructure, and presentation layers. This approach keeps business logic decoupled from both the HTTP framework and persistence details, improving maintainability and long-term extensibility.
+
+It also includes quality and operational practices suited for real-world environments:
+
+- **Input validation with Zod** for request parameters and payloads.
+- **Standardized error handling** through domain error codes mapped consistently to HTTP status codes.
+- **API key authentication (Bearer Token)** for administrative routes.
+- **OpenAPI documentation** exposed through Swagger UI and Scalar.
+- **Robust service startup** with environment variable checks and migration execution with exponential retry.
+- **Unit test coverage for core use cases**, including creation, retrieval, redirection, and deletion flows.
 
 ### Live Demo
 
