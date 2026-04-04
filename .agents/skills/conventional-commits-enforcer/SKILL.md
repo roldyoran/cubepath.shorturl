@@ -1,5 +1,5 @@
 ---
-name: conventional-commits
+name: conventional-commits-enforcer
 description: Enforce strict Conventional Commits format. Scope is optional and MUST be inferred automatically from modified files when possible.
 license: LICENSE.txt
 ---
