@@ -1,6 +1,6 @@
 ---
 name: conventional-commits-enforcer
-description: Enforce strict Conventional Commits format. Scope is optional and MUST be inferred automatically from modified files when possible.
+description: Validates and generates git commit enforcer messages following Conventional Commits specification. Use this skill when creating commits, reviewing commit history, or enforcing commit message standards. Enforces English-only messages, automatic scope inference from file paths, proper structure (header/body/files), and excludes sensitive files (.env, credentials, secrets) from any commit. Triggered on any git commit operation.
 license: LICENSE.txt
 ---
 
@@ -14,14 +14,15 @@ The AI MUST always generate commits following the exact structure and rules defi
 # Required Commit Format
 
 ```
-<type>(<scope (optional)>): <description>
+<type>(<scope>): <description>
 
 <summary>
 
 Files:
-- [NEW] path/file.ext: short description
+- [ADD] path/file.ext: short description
 - [MOD] path/file.ext: short description
 - [DEL] path/file.ext: short description
+- [REN] path/file.ext: short description
 ```
 
 If no clear scope can be inferred:
@@ -37,7 +38,7 @@ If no clear scope can be inferred:
 ## Header
 
 ```
-<type>(<scope (optional)>): <description>
+<type>(<scope>): <description>
 ```
 
 OR
@@ -54,69 +55,57 @@ OR
 * MUST NOT end with a period
 * MUST NOT contain emojis
 * MUST NOT contain extra whitespace
-* Scope is OPTIONAL but MUST be inferred when possible
+* Scope: OMIT if unclear, INFER when possible
 
 ---
 
-# Scope Inference (MANDATORY WHEN POSSIBLE)
+# Scope Inference
 
 The AI MUST infer scope automatically using:
 
 1. Modified file paths
 2. Folder names
 3. File types
-4. Module names
 
-## Folder → Scope Mapping
+## Scope Mapping Table
 
-### Frontend
-
-* `src/components/` → ui
-* `src/pages/` → ui
-* `src/router/` → router
-* `src/store/` → state
-* `src/forms/` → forms
-* `src/styles/` → styles
-
-### Backend
-
-* `routes/` → api
-* `controllers/` → api
-* `models/` → db
-* `migrations/` → db
-* `auth/` → auth
-* `middleware/` → middleware
-* `services/` → services
-
-### General
-
-* `config/` → config
-* `tests/` → tests
-* `docs/` → docs
-* `scripts/` → chore
-* `infra/` → infra
-* `utils/` → utils
-* `types/` → types
-* `i18n/` → i18n
-* `logs/` → logging
-* `security/` → security
-* `cache/` → cache
+| Path Pattern | Scope |
+|--------------|-------|
+| src/components/, src/pages/, src/views/ | ui |
+| src/router/ | router |
+| src/store/, src/composables/ | state |
+| src/forms/, src/styles/ | forms |
+| routes/, controllers/ | api |
+| models/, migrations/ | db |
+| auth/, middleware/ | auth |
+| services/ | services |
+| config/ | config |
+| tests/ | tests |
+| docs/ | docs |
+| scripts/ | chore |
+| .github/, ci/ | ci |
+| docker/ | docker |
+| infra/ | infra |
+| utils/, types/ | utils |
+| i18n/ | i18n |
+| logs/ | logging |
+| security/ | security |
+| cache/ | cache |
+| package.json, package-lock.json | deps |
+| *.config.*, biome.json, tsconfig.json | config |
 
 ## Inference Rules
 
-* If all files share same area → use that scope
-* If multiple areas → omit scope
-* If unclear → omit scope
-* If root-level files only → omit scope
-* If dependency changes → use `deps`
-* If CI files → use `ci`
-* If build files → use `build`
+* All files same area → use that scope
+* Multiple areas → omit scope
+* Dependency changes → use `deps`
+* CI files → use `ci`
+* Build files → use `build`
+* Root-level files only → omit scope
 
 ---
 
 # Allowed Types
-
-Use ONLY one of these:
 
 * feat
 * fix
@@ -141,50 +130,51 @@ Use ONLY one of these:
 * No trailing period
 
 Correct:
-
 ```
 feat(api): add user registration endpoint
 ```
 
 Correct (no scope):
-
 ```
 chore: update dependencies
 ```
 
 Incorrect:
-
 ```
 feat: Added new endpoint.
 ```
 
 ---
 
-# Body (MANDATORY)
+# Body
 
-The body MUST always be included.
+## 3+ Modified Files (MANDATORY)
+
+Body MUST be included when modifying 3+ files.
+
+## 2 or Less Modified Files (OPTIONAL)
+
+Body is optional for 2 or fewer file changes.
 
 Structure:
-
 ```
 <1-3 line summary>
 
 Files:
-- [NEW] file: description
+- [ADD] file: description
 ```
 
 ## Summary Requirements
 
-* 1–3 lines
+* 1–3 lines, max 80 characters total
 * Explain WHAT changed
 * No emojis
-* No bullet points
 
 ---
 
-# Files Section (MANDATORY)
+# Files Section
 
-The commit MUST include a full list of modified files.
+The commit MUST include a full list of modified files (UNLESS body is omitted).
 
 ## Rules
 
@@ -195,13 +185,17 @@ The commit MUST include a full list of modified files.
 
 ## Allowed Prefixes
 
-* [NEW]
-* [MOD]
-* [DEL]
+* [ADD] - new file
+* [MOD] - modified file
+* [DEL] - deleted file
+* [REN] - renamed file
+* [BIN] - binary/assets (describe in commit message, not in files list)
 
 ---
 
-# Example (Inferred Scope)
+# Examples
+
+## Example 1: Inferred Scope
 
 ```
 fix(api): validate user input
@@ -213,9 +207,7 @@ Files:
 - [MOD] controllers/auth.ts: validate request body
 ```
 
----
-
-# Example (No Scope)
+## Example 2: No Scope
 
 ```
 chore: update dependencies
@@ -227,14 +219,51 @@ Files:
 - [MOD] package-lock.json: regenerate lockfile
 ```
 
+## Example 3: Ambiguous Multiple Areas
+
+```
+feat: add user profile feature
+
+Implement user profile with settings and preferences.
+
+Files:
+- [ADD] src/pages/Profile.vue: profile page
+- [MOD] api/users.ts: user endpoint
+- [ADD] components/UserCard.vue: user card
+```
+
+## Example 4: Small Change (No Body)
+
+```
+fix(ui): update button color
+
+Files:
+- [MOD] src/styles/variables.css: update primary color
+```
+
+## Example 5: Binary Assets
+
+```
+chore: add app icons
+
+Update application icons for all platforms.
+
+(Binary files not listed - see working directory changes)
+```
+
+## Example 6: Revert Commit
+
+```
+revert: feat(api): add user registration endpoint
+
+Reverts previous commit that introduced user registration.
+```
+
 ---
 
 # Breaking Changes
 
-Breaking changes MUST be indicated in one of two ways:
-
 ## Option 1
-
 ```
 feat(api)!: change authentication flow
 ```
@@ -242,7 +271,6 @@ feat(api)!: change authentication flow
 ## Option 2
 
 Footer:
-
 ```
 BREAKING CHANGE: authentication now requires token
 ```
@@ -254,15 +282,29 @@ BREAKING CHANGE: authentication now requires token
 The AI MUST:
 
 1. Always write commits in English
-2. Always infer scope when possible
-3. Scope MUST be omitted if unclear
-4. Always include a body
-5. Always include file list
-6. Never use emojis
-7. Never omit modified files
-8. Never exceed 50 characters in description
-9. Never use past tense
-10. Never skip Files section
+2. Infer scope when possible, omit if unclear
+3. Include body for 3+ files, optional for ≤2
+4. Include file list (unless body omitted)
+5. Never use emojis
+6. Never exceed 50 chars in description
+7. Never exceed 80 chars in summary
+8. Never skip Files section
+9. **NEVER commit secrets, .env files, or credentials. If such files appear in changes, EXCLUDE them from commit entirely and warn the user.**
+
+---
+
+# Troubleshooting
+
+## When Scope is Unclear
+
+* If files span multiple areas → omit scope
+* If only root-level files → omit scope
+* If mixed file types → omit scope
+
+## When File List is Empty
+
+* Binary-only changes → describe in commit message
+* If all files are secrets → abort and warn user
 
 ---
 
@@ -270,13 +312,14 @@ The AI MUST:
 
 Before outputting a commit:
 
+* Check for secrets/.env in changes → exclude if found
 * infer scope from file paths
 * omit scope if ambiguous
 * header format correct
 * description imperative
-* body exists
-* summary exists
-* files section exists
+* body present (if 3+ files)
+* summary exists (if body present)
+* files section exists (unless body omitted)
 * prefixes correct
 * no emojis
 * English language
