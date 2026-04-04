@@ -1,6 +1,6 @@
 ---
 name: conventional-commits-enforcer
-description: Validates and generates git commit enforcer messages following Conventional Commits specification. Use this skill when creating commits, reviewing commit history, or enforcing commit message standards. Enforces English-only messages, automatic scope inference from file paths, proper structure (header/body/files), and excludes sensitive files (.env, credentials, secrets) from any commit. Triggered on any git commit operation.
+description: Validates and generates git commit enforcer messages following Conventional Commits specification with extras rules. Use this skill when creating commits, reviewing commit history, or enforcing commit message standards. Enforces English-only messages, automatic scope inference from file paths, proper structure (header/body/files), and excludes sensitive files (.env, credentials, secrets) from any commit. Triggered on any git commit operation.
 license: LICENSE.txt
 ---
 
